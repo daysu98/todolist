@@ -1,10 +1,33 @@
+<?php
+$title = '';
+$page  = '';
+
+if (isset($_GET['hal']) && $_GET['hal'] == 'users') {
+   $title = 'Data User';
+   $page  = 'users.php';
+}
+elseif (isset($_GET['hal']) && $_GET['hal'] == 'kategori') {
+   $title = 'Data Kategori';
+   $page  = 'kategori.php';
+}
+elseif (isset($_GET['hal']) && $_GET['hal'] == 'task') {
+   $title = 'Task';
+   $page  = 'task.php';
+}
+else {
+   $title = 'Dashboard';
+   $page  = 'dashboard.php';
+}
+?>
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
 
 <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>Todolist</title>
+   <title>
+      <?= $title ?> - Todolist
+   </title>
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
    <link rel="stylesheet" href="../assets/css/tailwind.output.css" />
    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
@@ -26,7 +49,7 @@
          ?>
          <main class="h-full overflow-y-auto">
             <?php
-            include("dashboard.php");
+            include($page);
             ?>
          </main>
       </div>
