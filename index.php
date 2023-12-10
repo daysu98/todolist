@@ -68,6 +68,7 @@ else {
             $data_login = mysqli_fetch_array($query);
             session_start();
             $_SESSION['status_login'] = true;
+            $_SESSION['user_id'] = $data_login['id'];
             header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps");
          }
          else {

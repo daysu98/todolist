@@ -4,20 +4,53 @@ if($_SESSION['status_login'] != true){
   return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist");
 }
 
+require_once('../config/koneksi.php');
+
 $title = '';
 $page  = '';
 
-if (isset($_GET['hal']) && $_GET['hal'] == 'users') {
-   $title = 'Data User';
-   $page  = 'users.php';
-}
-elseif (isset($_GET['hal']) && $_GET['hal'] == 'kategori') {
-   $title = 'Data Kategori';
-   $page  = 'kategori.php';
-}
-elseif (isset($_GET['hal']) && $_GET['hal'] == 'task') {
-   $title = 'Task';
-   $page  = 'task.php';
+if (isset($_GET['hal'])) {
+   // Users
+   if ($_GET['hal'] == 'users') {
+      $title = 'Data User';
+      $page  = './users/index.php';
+   }
+   elseif ($_GET['hal'] == 'adduser') {
+      $title = 'Tambah Data User';
+      $page  = './users/add.php';
+   }
+   elseif ($_GET['hal'] == 'edituser') {
+      $title = 'Edit Data User';
+      $page  = './users/edit.php';
+   }
+
+   // Kategori
+   elseif ($_GET['hal'] == 'kategori') {
+      $title = 'Data Kategori';
+      $page  = './kategori/index.php';
+   }
+   elseif ($_GET['hal'] == 'addkategori') {
+      $title = 'Tambah Data Kategori';
+      $page  = './kategori/add.php';
+   }
+   elseif ($_GET['hal'] == 'editkategori') {
+      $title = 'Edit Data Kategori';
+      $page  = './kategori/edit.php';
+   }
+
+   // Task
+   elseif ($_GET['hal'] == 'task') {
+      $title = 'Task';
+      $page  = './task/index.php';
+   }
+   elseif ($_GET['hal'] == 'addtask') {
+      $title = 'Tambah Task';
+      $page  = './task/add.php';
+   }
+   elseif ($_GET['hal'] == 'edittask') {
+      $title = 'Edit Task';
+      $page  = './task/edit.php';
+   }
 }
 else {
    $title = 'Dashboard';
