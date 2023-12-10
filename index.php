@@ -5,10 +5,71 @@ $page  = '';
 if (isset($_GET['hal']) && $_GET['hal'] == 'register') {
    $title = 'Register';
    $page  = 'register.php';
+
+   if (isset($_POST['btn_register'])) {
+      $username        = $_POST['username'];
+      $email           = $_POST['email'];
+      $password        = $_POST['password'];
+      $confirmPassword = $_POST['confirm_password'];
+
+      if (empty($username)) {
+         echo "<script>alert('Username tidak boleh kosong!!!')</script>";
+      }
+      elseif (empty($email)) {
+         echo "<script>alert('Email tidak boleh kosong!!!')</script>";
+      }
+      elseif (empty($password)) {
+         echo "<script>alert('Password tidak boleh kosong!!!')</script>";
+      }
+      elseif ($confirmPassword != $password) {
+         echo "<script>alert('Konfirmasi password tidak sama!!!')</script>";
+      }
+      else {
+         require_once('./config/koneksi.php');
+
+         $password = md5($password);
+
+         $query = mysqli_query($koneksi, "INSERT INTO users (username, email, password) VALUES ('$username','$email','$password')");
+         if (mysqli_num_rows($query) > 0) {
+            session_start();
+            echo "<script>alert('Akun berhasil dibuat.')</script>";
+            header("location: http://" . $_SERVER['HTTP_HOST']);
+         }
+         else {
+            echo "<script>alert('Username atau Password salah!')</script>";
+         }
+      }
+   }
 }
 else {
    $title = 'Login';
    $page  = 'login.php';
+
+   if (isset($_POST['btn_login'])) {
+      $username = $_POST['username'];
+      $password = $_POST['password'];
+
+      if (empty($username)) {
+         echo "<script>alert('Username tidak boleh kosong!!!')</script>";
+      }
+      elseif (empty($password)) {
+         echo "<script>alert('Password tidak boleh kosong!!!')</script>";
+      }
+      else {
+         require_once('./config/koneksi.php');
+
+         $query = mysqli_query($koneksi, "SELECT * FROM masyarakat WHERE username = '" . $username . "' AND password = '" . md5($password) . "'");
+         if (mysqli_num_rows($query) > 0) {
+            $data_login = mysqli_fetch_array($query);
+            session_start();
+            $_SESSION['status_login'] = true;
+            header("location: http://" . $_SERVER['HTTP_HOST'] . "/apps");
+         }
+         else {
+            echo "<script>alert('Username atau Password salah!')</script>";
+         }
+      }
+   }
 }
 ?>
 
