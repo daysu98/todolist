@@ -44,7 +44,7 @@ if (!isset($_GET['hal'])) {
                </thead>
                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                   <?php
-                  $query = mysqli_query($koneksi, "SELECT * FROM task JOIN kategori ON kategori.id = task.status_id JOIN status ON status.id = task.status_id");
+                  $query = mysqli_query($koneksi, "SELECT * FROM task JOIN kategori ON kategori.id = task.status_id JOIN status ON status.id = task.status_id WHERE user_id = $_SESSION[user_id]");
                   while ($data = mysqli_fetch_array($query)) { ?>
                      <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
