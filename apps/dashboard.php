@@ -1,6 +1,6 @@
 <?php
    if($_SERVER['PHP_SELF'] != '/apps/index.php'){
-     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/apps");
+     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps");
    }
 ?>
 

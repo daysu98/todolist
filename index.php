@@ -33,7 +33,7 @@ if (isset($_GET['hal']) && $_GET['hal'] == 'register') {
          if (mysqli_num_rows($query) > 0) {
             session_start();
             echo "<script>alert('Akun berhasil dibuat.')</script>";
-            header("location: http://" . $_SERVER['HTTP_HOST']);
+            header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist");
          }
          else {
             echo "<script>alert('Username atau Password salah!')</script>";
@@ -58,12 +58,12 @@ else {
       else {
          require_once('./config/koneksi.php');
 
-         $query = mysqli_query($koneksi, "SELECT * FROM masyarakat WHERE username = '" . $username . "' AND password = '" . md5($password) . "'");
+         $query = mysqli_query($koneksi, "SELECT * FROM users WHERE username = '" . $username . "' AND password = '" . md5($password) . "'");
          if (mysqli_num_rows($query) > 0) {
             $data_login = mysqli_fetch_array($query);
             session_start();
             $_SESSION['status_login'] = true;
-            header("location: http://" . $_SERVER['HTTP_HOST'] . "/apps");
+            header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps");
          }
          else {
             echo "<script>alert('Username atau Password salah!')</script>";

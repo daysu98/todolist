@@ -38,7 +38,7 @@
             <p>
                Belum punya akun?
                <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="http://<?= $_SERVER['HTTP_HOST'] . '?hal=register' ?>">
+                  href="http://<?= $_SERVER['HTTP_HOST'] . '/todolist?hal=register' ?>">
                   Buat Akun
                </a>
             </p>

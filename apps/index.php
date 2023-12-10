@@ -1,7 +1,7 @@
 <?php
 session_start();
 if($_SESSION['status_login'] != true){
-  return header("location: http://" . $_SERVER['HTTP_HOST']);
+  return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist");
 }
 
 $title = '';

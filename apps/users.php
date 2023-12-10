@@ -1,6 +1,6 @@
 <?php
    if(!isset($_GET['hal'])){
-     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/apps?hal=users");
+     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=users");
    }
 ?>
 

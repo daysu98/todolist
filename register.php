@@ -51,7 +51,7 @@
             <p class="mt-4">
                Sudah memiliki akun?
                <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="http://<?= $_SERVER['HTTP_HOST'] ?>">
+                  href="http://<?= $_SERVER['HTTP_HOST'] ?>/todolist">
                   Login
                </a>
             </p>
