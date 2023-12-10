@@ -1,3 +1,9 @@
+<?php
+if (!isset($_GET['hal'])) {
+   return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist?hal=register");
+}
+?>
+
 <div class="flex flex-col overflow-y-auto md:flex-row">
    <div class="h-32 md:h-auto md:w-1/2">
       <img aria-hidden="true" class="object-cover w-full h-full dark:hidden"
@@ -40,7 +46,8 @@
 
             <!-- You should use a button here, as the anchor is only used for the example  -->
             <button type="submit"
-               class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" name="btn_register">
+               class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+               name="btn_register">
                Create account
             </button>
          </form>
@@ -48,7 +55,7 @@
          <hr class="mt-4 mb-2" />
 
          <center>
-            <p class="mt-4">
+            <p class="dark:text-gray-200">
                Sudah memiliki akun?
                <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
                   href="http://<?= $_SERVER['HTTP_HOST'] ?>/todolist">

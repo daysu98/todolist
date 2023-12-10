@@ -35,7 +35,7 @@
          <hr class="mt-4 mb-2" />
 
          <center>
-            <p>
+            <p class="dark:text-gray-200">
                Belum punya akun?
                <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
                   href="http://<?= $_SERVER['HTTP_HOST'] . '/todolist?hal=register' ?>">
