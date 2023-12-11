@@ -7,14 +7,43 @@ if($_SESSION['status_login'] != true){
 $title = '';
 $page  = '';
 
+//Users
 if (isset($_GET['hal']) && $_GET['hal'] == 'users') {
    $title = 'Data User';
-   $page  = 'users.php';
+   $page  = './users/users.php';
 }
-elseif (isset($_GET['hal']) && $_GET['hal'] == 'kategori') {
+elseif (isset($_GET['hal']) && $_GET['hal'] == 'addusers') {
+   $title = 'Tambah Data User';
+   $page  = './users/add.php';
+}
+elseif (isset($_GET['hal']) && $_GET['hal'] == 'editusers') {
+   $title = 'Edit Data User';
+   $page  = './users/edit.php';
+}
+elseif (isset($_GET['hal']) && $_GET['hal'] == 'delusers') {
+   $title = 'Delete Data User';
+   $page  = './users/del.php';
+}
+
+//kategori
+if (isset($_GET['hal']) && $_GET['hal'] == 'kategori') {
    $title = 'Data Kategori';
-   $page  = 'kategori.php';
+   $page  = './kategori/kategori.php';
 }
+elseif (isset($_GET['hal']) && $_GET['hal'] == 'addkategori') {
+   $title = 'Tambah Data Kategori';
+   $page  = './kategori/add.php';
+}
+elseif (isset($_GET['hal']) && $_GET['hal'] == 'editkategori') {
+   $title = 'Edit Data Kategori';
+   $page  = './kategori/edit.php';
+}
+elseif (isset($_GET['hal']) && $_GET['hal'] == 'delkategori') {
+   $title = 'Delete Data Kategori';
+   $page  = './kategori/del.php';
+}
+
+//task
 elseif (isset($_GET['hal']) && $_GET['hal'] == 'task') {
    $title = 'Task';
    $page  = 'task.php';

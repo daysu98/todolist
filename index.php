@@ -29,8 +29,8 @@ if (isset($_GET['hal']) && $_GET['hal'] == 'register') {
 
          $password = md5($password);
 
-         $query = mysqli_query($koneksi, "INSERT INTO users (username, email, password) VALUES ('$username','$email','$password')");
-         if (mysqli_num_rows($query) > 0) {
+         $query = mysqli_query($koneksi, "INSERT INTO users (username, email, password, role_id) VALUES ('$username', '$email', '$password', 2)");
+         if ($query) {
             session_start();
             echo "<script>alert('Akun berhasil dibuat.')</script>";
             header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist");
