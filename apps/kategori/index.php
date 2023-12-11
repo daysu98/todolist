@@ -1,19 +1,19 @@
 <?php
    if(!isset($_GET['hal'])){
-     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=users");
+     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=kategori");
    }
 ?>
 
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Users
+      Kategori
    </h2>
    <center>
    <div clas="col-md-3">
-      <a href="add.php"
+      <a href='./kategori/add.php'
         class="flex px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
 
-        Tambah
+        Tambah Kategori
 
        
       </a>
@@ -28,9 +28,7 @@
             <tr 
               class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
               <th class=text-center class="px-4 py-3">ID</th>
-              <th class="px-4 py-3">Username</th>
-              <th class="px-4 py-3">Email</th>
-              <th class="px-4 py-3">Roles</th>
+              <th class="px-4 py-3">Kategori</th>
               <th class="px-4 py-3">Actions</th>
               
 
@@ -42,7 +40,7 @@
 
               <?php
                             include('../config/koneksi.php');
-                                $tampil = mysqli_query($koneksi,"SELECT * FROM users");
+                                $tampil = mysqli_query($koneksi,"SELECT * FROM kategori");
                             while ($data = mysqli_fetch_array($tampil)) {
 
 
@@ -53,13 +51,7 @@
               <th class="text-center"><?php echo $data['id']; ?></th>
 
               <td>
-                <p class="px-4 py-3 text-sm"><?php echo $data['username']; ?></p>
-              </td>
-              <td>
-                <p class="px-4 py-3 text-sm"><?php echo $data['email']; ?></p>
-              </td>
-              <td>
-                <p class="px-4 py-3 text-sm"><?php echo $data['role_id']; ?></p>
+                <p class="px-4 py-3 text-sm"><?php echo $data['kategori']; ?></p>
               </td>
 
               
