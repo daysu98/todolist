@@ -23,6 +23,9 @@ if (isset($_GET['hal'])) {
       $title = 'Edit Data User';
       $page  = './users/edit.php';
    }
+   elseif ($_GET['hal'] == 'deluser') {
+      $page  = './users/del.php';
+   }
 
    // Kategori
    elseif ($_GET['hal'] == 'kategori') {
@@ -37,6 +40,9 @@ if (isset($_GET['hal'])) {
       $title = 'Edit Data Kategori';
       $page  = './kategori/edit.php';
    }
+   elseif ($_GET['hal'] == 'delkategori') {
+      $page  = './kategori/del.php';
+   }
 
    // Task
    elseif ($_GET['hal'] == 'task') {
@@ -50,6 +56,9 @@ if (isset($_GET['hal'])) {
    elseif ($_GET['hal'] == 'edittask') {
       $title = 'Edit Task';
       $page  = './task/edit.php';
+   }
+   elseif ($_GET['hal'] == 'deltask') {
+      $page  = './task/del.php';
    }
 }
 else {
