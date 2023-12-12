@@ -1,20 +1,16 @@
 <?php
    if(!isset($_GET['hal'])){
-     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=kategori");
+     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=addkategori"); 
    }
 ?>
 
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Kategori
-   </h2>
+      Add Kategori
+   </h2> 
    <main class="h-full pb-16 overflow-y-auto">
           <div class="container px-6 mx-auto grid">
-            <h4
-              class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300"
-            > <br>
-              Form Tambah Kategori
-            </h4>
+           
             <div
               class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800"
             >
@@ -45,12 +41,12 @@ save
                 </button>
              
                 
-    <a href="kategori.php" class="btn btn-secondary">Batal</a>
+    <a href="/todolist/apps?hal=kategori" class="btn btn-secondary">Batal</a>
  </form>
 
 
     <?php
-    include('koneksi.php');
+    include('../config/koneksi.php');
     if(isset($_POST['simpan'])){ //proses simpan data kategori
       $kategori = $_POST['kategori'];
       
@@ -62,7 +58,7 @@ save
         echo '
         <script>
         alert("Berhasil Menambah Data Kategori");
-        window.location="kategori.php"; //menuju ke halaman kategori
+        window.location=apps/kategori/index.php; //menuju ke halaman kategori
         </script>
         ';
       }

@@ -1,10 +1,10 @@
 <?php
    if(!isset($_GET['hal'])){
-     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=kategori");
+     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=editkategori");
    }
 ?>
 <?php
-include ('koneksi.php');
+include ('../config/koneksi.php');
 $id = $_GET['id'];
 $show = mysqli_query($koneksi, "SELECT * FROM kategori WHERE id='$id'");
 $data = mysqli_fetch_array($show);
@@ -62,7 +62,7 @@ save
                 </button>
              
                 
-    <a href="kategori.php" class="btn btn-secondary">Batal</a>
+    <a href="/todolist/apps?hal=kategori" class="btn btn-secondary">Batal</a>
  </form>
 
 
@@ -83,7 +83,7 @@ if(isset($_POST['edit'])){
   if($edit){
     echo'<script>
     alert("Berhasil mengubah data kategori !");
-    window.location="kategori.php";
+    window.location=apps/kategori/index.php;
   </script>';
   }
 

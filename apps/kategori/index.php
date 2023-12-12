@@ -60,7 +60,7 @@
                                   
                                 
                         <div class="flex items-center space-x-1 text-sm">  
-                                <a href="edit.php?&id=<?=$data['id']?>">
+                                <a href="/todolist/apps?hal=editkategori">
                                 
                                  
                         
