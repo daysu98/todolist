@@ -1,7 +1,11 @@
 <?php
-   if(!isset($_GET['hal'])){
-     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=adduser");
-   }
+if (!isset($_GET['hal'])) {
+   return header("location:/todolist/apps?hal=adduser");
+}
+
+if ($_SESSION['role_id'] != 1) {
+   echo "<script>window.location='/todolist/apps';</script>";
+}
 ?>
 
 <div class="container px-6 mx-auto grid">

@@ -1,6 +1,10 @@
 <?php
 if (!isset($_GET['hal'])) {
-   return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=addtask");
+   return header("location:/todolist/apps?hal=addtask");
+}
+
+if ($_SESSION['role_id'] != 2) {
+   echo "<script>window.location='/todolist/apps';</script>";
 }
 ?>
 
@@ -20,7 +24,7 @@ if (!isset($_GET['hal'])) {
             <span class="text-gray-700 dark:text-gray-400">Judul Task</span>
             <input type="text"
                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-               placeholder="Masukkan judul task..." name="task" />
+               placeholder="Masukkan judul task..." name="task_name" />
          </label>
          <label class="block mt-4 text-sm">
             <span class="text-gray-700 dark:text-gray-400">
@@ -30,7 +34,7 @@ if (!isset($_GET['hal'])) {
                class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
                <option value="" selected disabled>Pilih Kategori</option>
                <?php
-               $query = mysqli_query($koneksi, "SELECT * FROM kategori");
+               $query = mysqli_query($koneksi, "SELECT * FROM kategori WHERE user_id = $_SESSION[user_id]");
                while ($data = mysqli_fetch_array($query)) {
                   ?>
                   <option value="<?= $data['id'] ?>">
@@ -61,7 +65,7 @@ if (!isset($_GET['hal'])) {
 <?php
 if (isset($_POST['simpan'])) {
    $pic        = $_FILES['pic'];
-   $task       = $_POST['task'];
+   $task       = $_POST['task_name'];
    $kategoriId = $_POST['kategori_id'];
    $deadline   = $_POST['deadline'];
 
@@ -86,27 +90,30 @@ if (isset($_POST['simpan'])) {
       }
 
       $allowed_types = ["image/jpeg", "image/png"];
-      $gambar_mime = mime_content_type($pic['tmp_name']);
+      $gambar_mime   = mime_content_type($pic['tmp_name']);
 
       if (!in_array($gambar_mime, $allowed_types)) {
          echo "<script>alert('Tipe gambar tidak diizinkan.')</script>";
       }
 
-      $gambar_ext = pathinfo($pic['name'], PATHINFO_EXTENSION);
+      $gambar_ext      = pathinfo($pic['name'], PATHINFO_EXTENSION);
       $new_gambar_name = uniqid() . "." . $gambar_ext;
 
       $destination = $upload_dir . $new_gambar_name;
       if (move_uploaded_file($pic['tmp_name'], $destination)) {
-         $query = mysqli_query($koneksi, "INSERT INTO task (pic, task, kategori_id, deadline, user_id) VALUES ('$new_gambar_name', '$task', $kategoriId, '$deadline', $_SESSION[user_id])");
+         $query = mysqli_query($koneksi, "INSERT INTO task (pic, task_name, kategori_id, deadline, user_id) VALUES ('$new_gambar_name', '$task', $kategoriId, '$deadline', $_SESSION[user_id])");
          if ($query) {
             session_start();
-            echo "<script>alert('Task Berhasil Ditambahkan.')</script>";
-            return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=task");
+            echo '<script>
+                     alert("Task Berhasil Ditambahkan.");
+                     window.location="/todolist/apps/?hal=task";
+                  </script>';
          }
          else {
             echo "<script>alert('Terjadi Kesalahan!')</script>";
          }
-      } else {
+      }
+      else {
          echo "<script>alert('Gambar gagal di upload.')</script>";
       }
    }

@@ -1,6 +1,6 @@
 <?php
 if (!isset($_GET['hal'])) {
-   return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist?hal=register");
+   return header("location:/todolist?hal=register");
 }
 ?>
 
@@ -23,7 +23,13 @@ if (!isset($_GET['hal'])) {
                   class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                   placeholder="example_123" name="username" />
             </label>
-            <label class="block text-sm">
+            <label class="block mt-4 text-sm">
+               <span class="text-gray-700 dark:text-gray-400">Nama Lengkap</span>
+               <input type="text"
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  placeholder="John Elbert" name="nama" />
+            </label>
+            <label class="block mt-4 text-sm">
                <span class="text-gray-700 dark:text-gray-400">Email</span>
                <input type="email"
                   class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
@@ -58,7 +64,7 @@ if (!isset($_GET['hal'])) {
             <p class="dark:text-gray-200">
                Sudah memiliki akun?
                <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="http://<?= $_SERVER['HTTP_HOST'] ?>/todolist">
+                  href="/todolist">
                   Login
                </a>
             </p>

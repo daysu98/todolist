@@ -1,10 +1,10 @@
 <?php
 session_start();
-if($_SESSION['status_login'] != true){
-  return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist");
+if ($_SESSION['status_login'] != true) {
+   return header("location: /todolist");
 }
 
-require_once('../config/koneksi.php');
+require_once('../config/konfigurasi.php');
 
 $title = '';
 $page  = '';
@@ -24,7 +24,7 @@ if (isset($_GET['hal'])) {
       $page  = './users/edit.php';
    }
    elseif ($_GET['hal'] == 'deluser') {
-      $page  = './users/del.php';
+      $page = './users/del.php';
    }
 
    // Kategori
@@ -41,7 +41,7 @@ if (isset($_GET['hal'])) {
       $page  = './kategori/edit.php';
    }
    elseif ($_GET['hal'] == 'delkategori') {
-      $page  = './kategori/del.php';
+      $page = './kategori/del.php';
    }
 
    // Task
@@ -53,12 +53,12 @@ if (isset($_GET['hal'])) {
       $title = 'Tambah Task';
       $page  = './task/add.php';
    }
-   elseif ($_GET['hal'] == 'edittask') {
+   elseif ($_GET['hal'] == 'edittask' && isset($_GET['id'])) {
       $title = 'Edit Task';
       $page  = './task/edit.php';
    }
    elseif ($_GET['hal'] == 'deltask') {
-      $page  = './task/del.php';
+      $page = './task/del.php';
    }
 }
 else {

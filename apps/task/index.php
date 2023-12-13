@@ -1,6 +1,10 @@
 <?php
 if (!isset($_GET['hal'])) {
-   return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps?hal=task");
+   return header("location:/todolist/apps?hal=task");
+}
+
+if ($_SESSION['role_id'] != 2) {
+   echo "<script>window.location='/todolist/apps';</script>";
 }
 ?>
 
@@ -44,7 +48,7 @@ if (!isset($_GET['hal'])) {
                </thead>
                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                   <?php
-                  $query = mysqli_query($koneksi, "SELECT * FROM task JOIN kategori ON kategori.id = task.status_id JOIN status ON status.id = task.status_id WHERE user_id = $_SESSION[user_id]");
+                  $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id]");
                   while ($data = mysqli_fetch_array($query)) { ?>
                      <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
@@ -58,7 +62,7 @@ if (!isset($_GET['hal'])) {
                            </div>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                           <?= $data['task'] ?>
+                           <?= $data['task_name'] ?>
                         </td>
                         <td class="px-4 py-3 text-sm">
                            <?= $data['kategori'] ?>
@@ -82,7 +86,7 @@ if (!isset($_GET['hal'])) {
                         </td>
                         <td class="px-4 py-3">
                            <div class="flex items-center space-x-4 text-sm">
-                              <a href="?hal=edittask"
+                              <a href="?hal=edittask&id=<?= $data['id'] ?>"
                                  class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                                  aria-label="Edit">
                                  <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -91,15 +95,19 @@ if (!isset($_GET['hal'])) {
                                     </path>
                                  </svg>
                               </a>
-                              <button
-                                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
-                                 aria-label="Delete">
-                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                       d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                       clip-rule="evenodd"></path>
-                                 </svg>
-                              </button>
+                              <form action="?hal=deltask" method="post">
+                                 <input type="hidden" name="id" value="<?= $data["id"] ?>">
+                                 <button type="submit" name="hapus"
+                                    onclick="return confirm('Yakin ingin menghapus task <?= $data['id'] ?>?');"
+                                    class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                                    aria-label="Delete">
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                       <path fill-rule="evenodd"
+                                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                          clip-rule="evenodd"></path>
+                                    </svg>
+                                 </button>
+                              </form>
                            </div>
                         </td>
                      </tr>

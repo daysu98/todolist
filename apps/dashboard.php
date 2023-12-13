@@ -1,7 +1,7 @@
 <?php
-   if($_SERVER['PHP_SELF'] != '/todolist/apps/index.php'){
-     return header("location: http://" . $_SERVER['HTTP_HOST'] . "/todolist/apps");
-   }
+if ($_SERVER['PHP_SELF'] != '/todolist/apps/index.php') {
+   return header("location:/todolist/apps");
+}
 ?>
 
 <div class="container px-6 mx-auto grid">
