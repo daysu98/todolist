@@ -8,11 +8,12 @@ if ($_SESSION['role_id'] != 2) {
 }
 ?>
 
+<main class="h-full pb-16 overflow-y-auto">
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Edit Task
    </h2>
-   <div class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800" style="margin-right: 7%; margin-left: 7%; ">
+   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <?php
       $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.id = $_GET[id]");
       $data  = mysqli_fetch_array($query);
@@ -82,15 +83,23 @@ if ($_SESSION['role_id'] != 2) {
                ?>
             </select>
          </label>
-
+         
          <!-- You should use a button here, as the anchor is only used for the example  -->
          <button type="submit"
             class="block px-4 py-2 mt-6 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
             style="float: right;" name="simpan">
-            Simpan
+            Save
+            
          </button>
+        <button class="block px-4 py-2 mt-6 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+            style="float: left;" name="batal">
+        <a href="/todolist/apps?hal=task" class="btn btn-secondary">Batal</a>
+        </button>
+         
       </form>
+      
    </div>
+   
 </div>
 
 <?php
@@ -118,26 +127,48 @@ if (isset($_POST['simpan'])) {
          mkdir($upload_dir, 0777, true);
       }
 
-      if (!empty($pic)) {
-         # code...
-         $allowed_types = ["image/jpeg", "image/png"];
-         $gambar_mime   = mime_content_type($pic['tmp_name']);
+      // if (!empty($pic)) {
+      //    # code...
+      //    $allowed_types = ["image/jpeg", "image/png"];
+      //    $gambar_mime   = mime_content_type($pic['tmp_name']);
 
-         if (!in_array($gambar_mime, $allowed_types)) {
-            echo "<script>alert('Tipe gambar tidak diizinkan.')</script>";
-         }
+      //    if (!in_array($gambar_mime, $allowed_types)) {
+      //       echo "<script>alert('Tipe gambar tidak diizinkan.')</script>";
+      //    }
 
-         $gambar_ext      = pathinfo($pic['name'], PATHINFO_EXTENSION);
-         $new_gambar_name = uniqid() . "." . $gambar_ext;
+      //    $gambar_ext      = pathinfo($pic['name'], PATHINFO_EXTENSION);
+      //    $new_gambar_name = uniqid() . "." . $gambar_ext;
 
-         $destination = $upload_dir . $new_gambar_name;
-         move_uploaded_file($pic['tmp_name'], $destination);
-         unlink($upload_file_directory . '/' . $data['pic']);
-      } else {
-         $pic = $data['pic'];
-      }
+      //    $destination = $upload_dir . $new_gambar_name;
+      //    move_uploaded_file($pic['tmp_name'], $destination);
+      //    unlink($upload_file_directory . '/' . $data['pic']);
+      // } else {
+      //    $pic = $data['pic'];
+      // }
 
-      $query = mysqli_query($koneksi, "UPDATE kategori SET task_name=' $task ' , pic=' $pic ' , kategori_id= $kategoriId  , deadline=' $deadlin', status_id= $statusId  WHERE id= $data[id] ");
+      // ...
+
+if (!empty($pic['tmp_name']) && file_exists($pic['tmp_name'])) {
+   $gambar_mime = mime_content_type($pic['tmp_name']);
+
+   if (!in_array($gambar_mime, $allowed_types)) {
+       echo "<script>alert('Tipe gambar tidak diizinkan.')</script>";
+   }
+
+   $gambar_ext = pathinfo($pic['name'], PATHINFO_EXTENSION);
+   $new_gambar_name = uniqid() . "." . $gambar_ext;
+
+   $destination = $upload_dir . $new_gambar_name;
+   move_uploaded_file($pic['tmp_name'], $destination);
+   unlink($upload_file_directory . '/' . $data['pic']);
+} else {
+   $pic = $data['pic'];
+}
+
+// ...
+
+
+      $query = mysqli_query($koneksi, "UPDATE task SET task_name=' $task ' , pic=' $pic ' , kategori_id= $kategoriId  , deadline=' $deadline', status_id= $statusId  WHERE id= $data[id] ");
       if ($query) {
          session_start();
          echo '<script>

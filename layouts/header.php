@@ -19,9 +19,76 @@
                      clip-rule="evenodd"></path>
                </svg>
             </div>
-            <input
-               class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
-               type="text" placeholder="Search for Todo" aria-label="Search" />
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Search</title>
+    <style>
+        /* Styling untuk memberikan umpan balik pada pencarian */
+        .search-results {
+            margin-top: 10px;
+            color: green;
+        }
+
+        .no-results {
+            margin-top: 10px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <input
+        id="searchInput"
+        class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+        type="text"
+        placeholder="Search for ..."
+        aria-label="Search"
+        oninput="search()"
+    />
+
+    <div id="searchResults" class="search-results"></div>
+    <div id="noResults" class="no-results"></div>
+
+    <script>
+        function search() {
+            // Mendapatkan nilai dari input pencarian
+            var searchValue = document.getElementById('searchInput').value.toLowerCase();
+
+            // Query selektor untuk elemen yang ingin Anda cari
+            var elementsToSearch = document.querySelectorAll('.element-to-search');
+
+            // Inisialisasi variabel untuk hasil pencarian
+            var searchResults = [];
+            
+            // Loop melalui elemen dan periksa apakah mereka cocok dengan pencarian
+            elementsToSearch.forEach(function(element) {
+                var textContent = element.textContent.toLowerCase();
+                if (textContent.includes(searchValue)) {
+                    searchResults.push(element.textContent);
+                }
+            });
+
+            // Menampilkan hasil pencarian atau pesan tidak ditemukan
+            var searchResultsDiv = document.getElementById('searchResults');
+            var noResultsDiv = document.getElementById('noResults');
+            
+            if (searchResults.length > 0) {
+                searchResultsDiv.innerHTML = 'Results: ' + searchResults.join(', ');
+                noResultsDiv.innerHTML = '';
+            } else {
+                searchResultsDiv.innerHTML = '';
+                noResultsDiv.innerHTML = 'No results found.';
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
          </div>
       </div>
       <ul class="flex items-center flex-shrink-0 space-x-6">
@@ -84,4 +151,6 @@
          </li>
       </ul>
    </div>
+
+   
 </header>

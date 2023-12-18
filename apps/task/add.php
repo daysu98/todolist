@@ -10,7 +10,7 @@ if ($_SESSION['role_id'] != 2) {
 
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Tambah Task
+      Add Task
    </h2>
    <div class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800" style="margin-right: 7%; margin-left: 7%; ">
       <form method="POST" enctype="multipart/form-data">
@@ -56,8 +56,13 @@ if ($_SESSION['role_id'] != 2) {
          <button type="submit"
             class="block px-4 py-2 mt-6 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
             style="float: right;" name="simpan">
-            Simpan
-         </button>
+            Save
+            
+        </button>
+        <button class="block px-4 py-2 mt-6 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+            style="float: left;" name="batal">
+        <a href="/todolist/apps?hal=task" class="btn btn-secondary">Batal</a>
+        </button>
       </form>
    </div>
 </div>

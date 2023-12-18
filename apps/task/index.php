@@ -1,4 +1,6 @@
 <?php
+$recordsPerPage = 10;
+
 if (!isset($_GET['hal'])) {
    return header("location:/todolist/apps?hal=task");
 }
@@ -7,6 +9,9 @@ if ($_SESSION['role_id'] != 2) {
    echo "<script>window.location='/todolist/apps';</script>";
 }
 ?>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
+</head>
 
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -46,13 +51,14 @@ if ($_SESSION['role_id'] != 2) {
                      <th class="px-4 py-3">Actions</th>
                   </tr>
                </thead>
+               <div id="taskContent" class="w-full overflow-x-auto">
                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                  <?php
+                  <?php 
                   $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id]");
                   while ($data = mysqli_fetch_array($query)) { ?>
                      <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
-                           <div class="flex items-center text-sm">
+                           <div class="flex items-center text-sm ">
                               <!-- Avatar with inset shadow -->
                               <div class="relative hidden w-12 h-12 mr-3 rounded-full md:block">
                                  <img class="object-cover w-full h-full rounded-full" src="../uploads/<?= $data['pic'] ?>"
@@ -114,10 +120,82 @@ if ($_SESSION['role_id'] != 2) {
                      <?php
                   }
                   ?>
+                  </div>
                </tbody>
             </table>
+            
+            <script>
+            $(document).ready(function () {
+                function loadPage(page) {
+                    $.ajax({
+                        url: '?hal=task&page=' + page,
+                        type: 'GET',
+                        success: function (data) {
+                            $('#taskContent').html(data);
+                        },
+                        error: function () {
+                            console.log('Error loading page');
+                        }
+                    });
+                }
+        
+                // Menanggapi klik pada halaman paginasi
+                $(document).on('click', '.page-link', function (e) {
+                    e.preventDefault();
+                    var page = $(this).text();
+                    loadPage(page);
+                });
+            });
+        </script>
+        
+    
+    <?php 
+$sqlCount = "SELECT COUNT(*) as total FROM task";
+$resultCount = $koneksi->query($sqlCount);
+$row = $resultCount->fetch_assoc();
+$totalPages = ceil($row['total'] / $recordsPerPage);
+
+if ($totalPages > 1) {
+    echo '<div class="pagination">';
+    for ($i = 1; $i <= $totalPages; $i++) {
+        $activeClass = ($i == $page) ? 'active' : '';
+        echo "<a class='page-link $activeClass' href='#'>$i</a>";
+    }
+    echo '</div>';
+}
+?>
+
+    
          </div>
       </div>
    </div>
+   <?php
+// ... (your existing code)
+
+// Fetch tasks from the database
+$query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id]");
+
+while ($data = mysqli_fetch_array($query)) {
+    // Check if the deadline has passed
+    $currentDate = date('Y-m-d');
+    $deadline = $data['deadline'];
+
+    if ($currentDate > $deadline) {
+        // Update the status to "expired"
+        $updateQuery = "UPDATE task SET status_id = 4 WHERE id = $data[id]";
+        mysqli_query($koneksi, $updateQuery);
+
+        // Update the $data array to reflect the updated status
+        $data['status_id'] = 4;
+        $data['status'] = 'Expired';
+    }
+    ?>
+    <tr class="text-gray-700 dark:text-gray-400">
+        <!-- ... (your existing code) -->
+    </tr>
+    <?php
+}
+?>
+
 
 </div>
