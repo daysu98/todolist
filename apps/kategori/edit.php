@@ -48,21 +48,25 @@ $data = mysqli_fetch_array($show);
 
 
       <?php
-      if (isset($_POST['edit'])) {
+      if (isset($_POST['simpan'])) {
         $id       = $_POST['id'];
         $kategori     = $_POST['kategori'];
         
 
 
-        $edit = mysqli_query($koneksi, 'UPDATE kategori SET kategori="' . $kategori . '"  WHERE id="' . $id . '"');
+        $query = mysqli_query($koneksi, 'UPDATE kategori SET kategori="' . $kategori . '"  WHERE id="' . $id . '"');
 
 
-        if ($edit) {
+        if ($query) {
+          session_start();
           echo '<script>
-    alert("Berhasil mengubah data kategori !");
-    window.location=apps/kategori/index.php;
-  </script>';
-        }
+                      alert("Kategori Berhasil Diubah.");
+                      window.location="/todolist/apps/?hal=kategori";
+                   </script>';
+       }
+       else {
+          echo "<script>alert('Terjadi Kesalahan!')</script>";
+       }
 
       }
 

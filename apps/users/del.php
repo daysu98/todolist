@@ -1,6 +1,6 @@
 <?php
 if (!isset($_GET['hal'])) {
-  return header("location:/todolist/apps?hal=delkategori");
+  return header("location:/todolist/apps?hal=deluser");
 }
 
 if ($_SESSION['role_id'] != 2) {
@@ -15,21 +15,21 @@ if ($_SESSION['role_id'] != 2) {
 
       <?php
       $id     = $_GET['id'];
-      $tampil = mysqli_query($koneksi, "SELECT * FROM kategori WHERE id='$id'");
+      $tampil = mysqli_query($koneksi, "SELECT * FROM users WHERE id='$id'");
       $data   = mysqli_fetch_array($tampil);
       ?>
 
       <main class="h-full pb-16 overflow-y-auto">
         <div class="container px-6 mx-auto grid">
           <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300"> <br>
-            Hapus Data Kategori
+            Hapus Data User
           </h4>
           <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
             <form method="POST">
               <div class="form-group">
                 <div class="alert alert-danger" role="alert">
-                  <h6>Yakin Akan Menghapus Data Kategori <b>
-                      <?php echo $data['kategori'] ?>
+                  <h6>Yakin Akan Menghapus Data User <b>
+                      <?php echo $data['username'] ?>
                     </b> ?</h6>
                   <br>
                   <input type="hidden" name="id" value="<?php echo $id ?>" required class="form-control">
@@ -44,22 +44,22 @@ if ($_SESSION['role_id'] != 2) {
                     </path>
                     </svg>
                   </button>
-                  <a href="kategori.php" class="btn btn-secondary">Batal</a>
+                  <a href="apps?hal=users" class="btn btn-secondary">Batal</a>
                 </div>
               </div>
             </form>
           </div>
 
           <?php
-          if (isset($_POST['hapus'])) { //proses hapus data kategori
+          if (isset($_POST['hapus'])) { //proses hapus data user
             $id = $_POST['id'];
 
-            $ubah = mysqli_query($koneksi, 'DELETE FROM kategori WHERE id="' . $id . '"');
-            if ($ubah) {
+            $hapus = mysqli_query($koneksi, 'DELETE FROM users WHERE id="' . $id . '"');
+            if ($hapus) {
               echo '
         <script>
-        alert("Berhasil Menghapus Data kategori");
-        window.location="?hal=kategori"; //menuju ke halaman kategori
+        alert("Berhasil Menghapus Data User");
+        window.location="?hal=users"; //menuju ke halaman user
         </script>
         ';
             }

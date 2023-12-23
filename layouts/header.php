@@ -1,3 +1,9 @@
+<?php
+    $search = $_GET['search'] ?? '';
+    $sql = "SELECT * FROM task WHERE task_name LIKE '%$search%'";
+    $task = $koneksi->query($sql);
+?>
+
 <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
    <div class="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
       <!-- Mobile hamburger -->
@@ -13,13 +19,15 @@
       <div class="flex justify-center flex-1 lg:mr-32">
          <div class="relative w-full max-w-xl mr-6 focus-within:text-purple-500">
             <div class="absolute inset-y-0 flex items-center pl-2">
+            <!-- <button type="submit"> -->
                <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd"
                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                      clip-rule="evenodd"></path>
                </svg>
+            <!-- </button> -->
             </div>
-            <!DOCTYPE html>
+           <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -39,56 +47,54 @@
     </style>
 </head>
 <body>
-
-    <input
-        id="searchInput"
-        class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
-        type="text"
-        placeholder="Search for ..."
-        aria-label="Search"
-        oninput="search()"
-    />
+    <form action="">
+        <input
+            class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+            type="text"
+            placeholder="Search for ..."
+            aria-label="Search"
+            oninput="search()"
+      
+            class="form-control form-control-sm"
+            value="<?= $search ?>"
+            placeholder="Search..."
+            name="hal" value="<?= $_GET['hal'] ?? '' ?>"
+        />
+    </form>
 
     <div id="searchResults" class="search-results"></div>
     <div id="noResults" class="no-results"></div>
 
     <script>
         function search() {
-            // Mendapatkan nilai dari input pencarian
-            var searchValue = document.getElementById('searchInput').value.toLowerCase();
-
-            // Query selektor untuk elemen yang ingin Anda cari
-            var elementsToSearch = document.querySelectorAll('.element-to-search');
-
-            // Inisialisasi variabel untuk hasil pencarian
-            var searchResults = [];
-            
-            // Loop melalui elemen dan periksa apakah mereka cocok dengan pencarian
-            elementsToSearch.forEach(function(element) {
-                var textContent = element.textContent.toLowerCase();
-                if (textContent.includes(searchValue)) {
-                    searchResults.push(element.textContent);
-                }
-            });
-
-            // Menampilkan hasil pencarian atau pesan tidak ditemukan
+            var searchInput = document.querySelector('input[name="search"]');
             var searchResultsDiv = document.getElementById('searchResults');
             var noResultsDiv = document.getElementById('noResults');
-            
-            if (searchResults.length > 0) {
-                searchResultsDiv.innerHTML = 'Results: ' + searchResults.join(', ');
-                noResultsDiv.innerHTML = '';
-            } else {
-                searchResultsDiv.innerHTML = '';
-                noResultsDiv.innerHTML = 'No results found.';
-            }
+
+            // Fetch search results using AJAX
+            fetch('your_search_endpoint.php?search=' + searchInput.value)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        // Display search results
+                        searchResultsDiv.innerHTML = '';
+                        data.forEach(result => {
+                            searchResultsDiv.innerHTML += '<div>' + result.task_name + '</div>';
+                        });
+                        noResultsDiv.innerHTML = '';
+                    } else {
+                        // Display no results message
+                        searchResultsDiv.innerHTML = '';
+                        noResultsDiv.innerHTML = 'No results found.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching search results:', error);
+                });
         }
     </script>
-
 </body>
 </html>
-
-
          </div>
       </div>
       <ul class="flex items-center flex-shrink-0 space-x-6">

@@ -144,7 +144,7 @@ if ($result) {
 
     <div>
         <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            Approved 
+            Finish
         </p>
         <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             <?php echo number_format($totalDone); ?>
@@ -190,7 +190,7 @@ if ($result) {
                   <p
                     class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400"
                   >
-                    Denied 
+                    Not Yet 
                   </p>
                   <p
                     class="text-lg font-semibold text-gray-700 dark:text-gray-200"
@@ -218,8 +218,7 @@ if ($result) {
         // Assuming you have a database connection established
 
         // Fetch tasks from the database
-        $query = "SELECT * FROM task WHERE status_id = '4'";
-        $result = mysqli_query($koneksi, $query);
+        $query = "SELECT * FROM task WHERE status_id = '6'";
 
         // Check if the query was successful
         if ($result) {

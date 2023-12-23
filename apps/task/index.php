@@ -1,5 +1,4 @@
-<?php
-$recordsPerPage = 10;
+<?php 
 
 if (!isset($_GET['hal'])) {
    return header("location:/todolist/apps?hal=task");
@@ -8,6 +7,15 @@ if (!isset($_GET['hal'])) {
 if ($_SESSION['role_id'] != 2) {
    echo "<script>window.location='/todolist/apps';</script>";
 }
+
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$itemsPerPage = 10; // Adjust this based on how many items you want to display per page
+
+$offset = ($page - 1) * $itemsPerPage;
+
+$query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
+
+
 ?>
 <head>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
@@ -37,6 +45,14 @@ if ($_SESSION['role_id'] != 2) {
             <span>Tambah Task</span>
          </a>
       </div>
+      <div class="w-full overflow-x-auto">
+    <table class="w-full whitespace-no-wrap">
+        <!-- ... (your existing code) -->
+    </table>
+    
+   
+</div>
+
       <div class="w-full overflow-hidden rounded-lg shadow-xs">
          <div class="w-full overflow-x-auto">
             <table class="w-full whitespace-no-wrap">
@@ -51,17 +67,18 @@ if ($_SESSION['role_id'] != 2) {
                      <th class="px-4 py-3">Actions</th>
                   </tr>
                </thead>
+               
                <div id="taskContent" class="w-full overflow-x-auto">
                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                   <?php 
-                  $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id]");
-                  while ($data = mysqli_fetch_array($query)) { ?>
+                 $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
+                 while ($data = mysqli_fetch_array($query)) { ?>
                      <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
                            <div class="flex items-center text-sm ">
                               <!-- Avatar with inset shadow -->
                               <div class="relative hidden w-12 h-12 mr-3 rounded-full md:block">
-                                 <img class="object-cover w-full h-full rounded-full" src="../uploads/<?= $data['pic'] ?>"
+                                 <img class="object-cover w-full h-full rounded-full" src="../uploads/<?= $data['pic'] ?>" class="img-box" style="max-widht:15em;"width="200" 
                                     alt="" loading="lazy" />
                                  <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                               </div>
@@ -123,48 +140,29 @@ if ($_SESSION['role_id'] != 2) {
                   </div>
                </tbody>
             </table>
-            
-            <script>
-            $(document).ready(function () {
-                function loadPage(page) {
-                    $.ajax({
-                        url: '?hal=task&page=' + page,
-                        type: 'GET',
-                        success: function (data) {
-                            $('#taskContent').html(data);
-                        },
-                        error: function () {
-                            console.log('Error loading page');
-                        }
-                    });
-                }
-        
-                // Menanggapi klik pada halaman paginasi
-                $(document).on('click', '.page-link', function (e) {
-                    e.preventDefault();
-                    var page = $(this).text();
-                    loadPage(page);
-                });
-            });
-        </script>
-        
+         
     
-    <?php 
-$sqlCount = "SELECT COUNT(*) as total FROM task";
-$resultCount = $koneksi->query($sqlCount);
-$row = $resultCount->fetch_assoc();
-$totalPages = ceil($row['total'] / $recordsPerPage);
-
-if ($totalPages > 1) {
-    echo '<div class="pagination">';
-    for ($i = 1; $i <= $totalPages; $i++) {
-        $activeClass = ($i == $page) ? 'active' : '';
-        echo "<a class='page-link $activeClass' href='#'>$i</a>";
+   
+    
+    <!-- Pagination links -->
+    <?php
+    $totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM task WHERE user_id = $_SESSION[user_id]");
+    $totalItems = mysqli_fetch_assoc($totalItemsQuery)['total'];
+    
+    $totalPages = ceil($totalItems / $itemsPerPage);
+    
+    if ($totalPages > 1) {
+        echo '<div class="flex justify-end mt-4">';
+        for ($i = 1; $i <= $totalPages; $i++) {
+            $activeClass = $i == $page ? 'bg-purple-600 text-white' : 'text-purple-600';
+            echo '<a href="?hal=task&page=' . $i . '" class="px-3 py-1 mx-1 text-sm font-medium leading-5 rounded-md hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple ' . $activeClass . '">' . $i . '</a>';
+        }
+        echo '</div>';
     }
-    echo '</div>';
-}
-?>
+    ?>
+</div>
 
+           
     
          </div>
       </div>
@@ -182,11 +180,11 @@ while ($data = mysqli_fetch_array($query)) {
 
     if ($currentDate > $deadline) {
         // Update the status to "expired"
-        $updateQuery = "UPDATE task SET status_id = 4 WHERE id = $data[id]";
+        $updateQuery = "UPDATE task SET status_id = 6 WHERE id = $data[id]";
         mysqli_query($koneksi, $updateQuery);
 
         // Update the $data array to reflect the updated status
-        $data['status_id'] = 4;
+        $data['status_id'] = 6;
         $data['status'] = 'Expired';
     }
     ?>
