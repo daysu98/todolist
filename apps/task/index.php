@@ -74,16 +74,11 @@ $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status
                  $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
                  while ($data = mysqli_fetch_array($query)) { ?>
                      <tr class="text-gray-700 dark:text-gray-400">
-                        <td class="px-4 py-3">
-                           <div class="flex items-center text-sm ">
-                              <!-- Avatar with inset shadow -->
-                              <div class="relative hidden w-12 h-12 mr-3 rounded-full md:block">
-                                 <img class="object-cover w-full h-full rounded-full" src="../uploads/<?= $data['pic'] ?>" class="img-box" style="max-widht:15em;"width="200" 
-                                    alt="" loading="lazy" />
-                                 <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-                              </div>
-                           </div>
-                        </td>
+                       
+
+                           <td> <a href="../uploads/<?=$data['pic']?>"> <img src="../uploads/<?=$data['pic']?>"class="img-box" style="max-widht:15em;"
+                                    width="80" ></a> </td>
+
                         <td class="px-4 py-3 text-sm">
                            <?= $data['task_name'] ?>
                         </td>
@@ -168,18 +163,17 @@ $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status
       </div>
    </div>
    <?php
-// ... (your existing code)
 
-// Fetch tasks from the database
 $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id]");
 
 while ($data = mysqli_fetch_array($query)) {
-    // Check if the deadline has passed
+    // Check if the deadline has passed and the status is not 'Finish', 'Not Yet', or 'On Progress'
     $currentDate = date('Y-m-d');
     $deadline = $data['deadline'];
+    $allowedStatus = ['Finish'];
 
-    if ($currentDate > $deadline) {
-        // Update the status to "expired"
+    if ($currentDate > $deadline && !in_array($data['status'], $allowedStatus)) {
+        // Update the status to "Expired"
         $updateQuery = "UPDATE task SET status_id = 6 WHERE id = $data[id]";
         mysqli_query($koneksi, $updateQuery);
 
@@ -187,12 +181,14 @@ while ($data = mysqli_fetch_array($query)) {
         $data['status_id'] = 6;
         $data['status'] = 'Expired';
     }
+}
+
     ?>
     <tr class="text-gray-700 dark:text-gray-400">
         <!-- ... (your existing code) -->
     </tr>
     <?php
-}
+
 ?>
 
 

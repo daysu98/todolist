@@ -1,6 +1,6 @@
 <?php
 if (!isset($_GET['hal'])) {
-  return header("location: /todolist/apps?hal=kategori");
+  return header("location: /todolist/apps?hal=kategori"); 
 }
 
 if ($_SESSION['role_id'] != 2) {
@@ -12,10 +12,13 @@ $itemsPerPage = 10; // Adjust this based on how many items you want to display p
 
 $offset = ($page - 1) * $itemsPerPage;
 
-$query = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kategori WHERE user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
+$query = mysqli_query($koneksi, "SELECT kategori * FROM kategori WHERE user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
 
 
 ?>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
+</head>
 
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -47,7 +50,6 @@ $query = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kategori WHERE us
                <thead>
                   <tr
                      class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                     <th class="px-4 py-3">Id</th>
                      <th class="px-4 py-3">Kategori</th>
                      <th class="px-4 py-3">Actions</th>
                   </tr>
@@ -61,9 +63,7 @@ $query = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kategori WHERE us
                 ?>
                      <tr class="text-gray-700 dark:text-gray-400">
                         
-                        <td class="px-4 py-3 text-sm">
-                           <?= $data['id'] ?>
-                        </td>
+                        
                         <td class="px-4 py-3 text-sm">
                            <?= $data['kategori'] ?>
                         </td>
@@ -103,21 +103,22 @@ $query = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kategori WHERE us
 
             
     <!-- Pagination links -->
-    <?php
-    $totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kategori WHERE user_id = $_SESSION[user_id]");
-    $totalItems = mysqli_fetch_assoc($totalItemsQuery)['total'];
-    
-    $totalPages = ceil($totalItems / $itemsPerPage);
-    
-    if ($totalPages > 1) {
-        echo '<div class="flex justify-end mt-4">';
-        for ($i = 1; $i <= $totalPages; $i++) {
-            $activeClass = $i == $page ? 'bg-purple-600 text-white' : 'text-purple-600';
-            echo '<a href="?hal=kategori&page=' . $i . '" class="px-3 py-1 mx-1 text-sm font-medium leading-5 rounded-md hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple ' . $activeClass . '">' . $i . '</a>';
-        }
-        echo '</div>';
+<?php
+$totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kategori WHERE user_id = $_SESSION[user_id]");
+$totalItems = mysqli_fetch_assoc($totalItemsQuery)['total'];
+
+$totalPages = ceil($totalItems / $itemsPerPage);
+
+if ($totalPages > 1) {
+    echo '<div class="flex justify-end mt-4">';
+    for ($i = 1; $i <= $totalPages; $i++) {
+        $activeClass = $i == $page ? 'bg-purple-600 text-white' : 'text-purple-600';
+        echo '<a href="?hal=kategori&page=' . $i . '" class="px-3 py-1 mx-1 text-sm font-medium leading-5 rounded-md hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple ' . $activeClass . '">' . $i . '</a>';
     }
-    ?>
+    echo '</div>';
+}
+?>
+
 
          </div>
       </div>

@@ -101,7 +101,6 @@ if ($_SESSION['role_id'] != 2) {
    </div>
    
 </div>
-
 <?php
 if (isset($_POST['simpan'])) {
    $pic        = $_FILES['pic'];
@@ -112,71 +111,53 @@ if (isset($_POST['simpan'])) {
 
    if (empty($task)) {
       echo "<script>alert('Task tidak boleh kosong!!!')</script>";
-   }
-   elseif (empty($kategoriId)) {
+   } elseif (empty($kategoriId)) {
       echo "<script>alert('Kategori tidak boleh kosong!!!')</script>";
-   }
-   elseif (empty($deadline)) {
+   } elseif (empty($deadline)) {
       echo "<script>alert('Deadline tidak boleh kosong!!!')</script>";
-   }
-   else {
-
+   } else {
       $upload_dir = "../uploads/";
 
-      if (!file_exists($upload_dir)) {
-         mkdir($upload_dir, 0777, true);
+      // Check if the file is uploaded
+      if (!empty($pic['tmp_name']) && file_exists($pic['tmp_name'])) {
+         $allowed_types = ["image/jpeg", "image/png"];
+         $gambar_mime   = mime_content_type($pic['tmp_name']);
+
+         // Check if the file type is allowed
+         if (!in_array($gambar_mime, $allowed_types)) {
+            echo "<script>alert('Tipe gambar tidak diizinkan.')</script>";
+         } else {
+            $gambar_ext      = pathinfo($pic['name'], PATHINFO_EXTENSION);
+            $new_gambar_name = uniqid() . "." . $gambar_ext;
+
+            $destination = $upload_dir . $new_gambar_name;
+
+            // Move the uploaded file to the destination
+            if (move_uploaded_file($pic['tmp_name'], $destination)) {
+               // Delete the old image file
+               unlink($upload_dir . $data['pic']);
+
+               // Update the database with the new file name
+               $pic = $new_gambar_name;
+            } else {
+               echo "<script>alert('Failed to upload file.')</script>";
+            }
+         }
+      } else {
+         // Use the existing image if no new image is uploaded
+         $pic = $data['pic'];
       }
 
-      // if (!empty($pic)) {
-      //    # code...
-      //    $allowed_types = ["image/jpeg", "image/png"];
-      //    $gambar_mime   = mime_content_type($pic['tmp_name']);
-
-      //    if (!in_array($gambar_mime, $allowed_types)) {
-      //       echo "<script>alert('Tipe gambar tidak diizinkan.')</script>";
-      //    }
-
-      //    $gambar_ext      = pathinfo($pic['name'], PATHINFO_EXTENSION);
-      //    $new_gambar_name = uniqid() . "." . $gambar_ext;
-
-      //    $destination = $upload_dir . $new_gambar_name;
-      //    move_uploaded_file($pic['tmp_name'], $destination);
-      //    unlink($upload_file_directory . '/' . $data['pic']);
-      // } else {
-      //    $pic = $data['pic'];
-      // }
-
-      // ...
-
-if (!empty($pic['tmp_name']) && file_exists($pic['tmp_name'])) {
-   $gambar_mime = mime_content_type($pic['tmp_name']);
-
-   if (!in_array($gambar_mime, $allowed_types)) {
-       echo "<script>alert('Tipe gambar tidak diizinkan.')</script>";
-   }
-
-   $gambar_ext = pathinfo($pic['name'], PATHINFO_EXTENSION);
-   $new_gambar_name = uniqid() . "." . $gambar_ext;
-
-   $destination = $upload_dir . $new_gambar_name;
-   move_uploaded_file($pic['tmp_name'], $destination);
-   unlink($upload_file_directory . '/' . $data['pic']);
-} else {
-   $pic = $data['pic'];
-}
-
-// ...
-
-
-      $query = mysqli_query($koneksi, "UPDATE task SET task_name=' $task ' , pic=' $pic ' , kategori_id= $kategoriId  , deadline=' $deadline', status_id= $statusId  WHERE id= $data[id] ");
+      // Update the task in the database
+      $query = mysqli_query($koneksi, "UPDATE task SET task_name='$task', pic='$pic', kategori_id=$kategoriId, deadline='$deadline', status_id=$statusId WHERE id=$data[id]");
+      
       if ($query) {
          session_start();
          echo '<script>
                      alert("Task Berhasil Diubah.");
                      window.location="/todolist/apps/?hal=task";
                   </script>';
-      }
-      else {
+      } else {
          echo "<script>alert('Terjadi Kesalahan!')</script>";
       }
    }
