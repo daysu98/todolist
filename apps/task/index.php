@@ -14,10 +14,29 @@ $itemsPerPage = 10; // Adjust this based on how many items you want to display p
 $offset = ($page - 1) * $itemsPerPage;
 
 if (isset($_GET['search_task'])) {
-   $search = "AND task.task_name LIKE '%$_GET[search_task]%'";
+   $searchQuery = "AND task.task_name LIKE '%$_GET[search_task]%'";
 }
 else {
-   $search = "";
+   $searchQuery = "";
+}
+
+if (isset($_GET['expired'])) {
+   switch ($_GET['expired']) {
+      case 'now':
+         $deadlineQuery = "AND task.deadline = '$dateNow' AND task.status_id <> 6";
+         break;
+
+      case 'tomorrow':
+         $deadlineQuery = "AND task.deadline = '$dateTomorrow' AND task.status_id <> 6";
+         break;
+      
+      default:
+         $deadlineQuery = "";
+         break;
+   }
+}
+else {
+   $deadlineQueryQuery = "";
 }
 
 ?>
@@ -66,7 +85,7 @@ else {
                <div id="taskContent" class="w-full overflow-x-auto">
                   <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                      <?php
-                     $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id] $search LIMIT $itemsPerPage OFFSET $offset");
+                     $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id] $deadlineQuery $searchQuery LIMIT $itemsPerPage OFFSET $offset");
                      $no = 1 + $offset;
                      while ($data = mysqli_fetch_array($query)) { ?>
                         <tr class="text-gray-700 dark:text-gray-400">
@@ -141,7 +160,7 @@ else {
 
             <!-- Pagination links -->
             <?php
-            $totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM task WHERE user_id = $_SESSION[user_id] $search");
+            $totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM task WHERE user_id = $_SESSION[user_id] $deadlineQuery $searchQuery");
             $totalItems      = mysqli_fetch_assoc($totalItemsQuery)['total'];
 
             $totalPages = ceil($totalItems / $itemsPerPage);
