@@ -36,7 +36,7 @@ if ($_SESSION['role_id'] != 1) {
           <thead>
             <tr
               class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-              <th class=text-center class="px-4 py-3">ID</th>
+              <th class=text-center class="px-4 py-3">No</th>
               <th class="px-4 py-3">Username</th>
               <th class="px-4 py-3">Email</th>
               <th class="px-4 py-3">Roles</th>
@@ -50,6 +50,7 @@ if ($_SESSION['role_id'] != 1) {
             <tr class="text-gray-700 dark:text-gray-400">
 
               <?php
+              $no = 1;
               $tampil = mysqli_query($koneksi, "SELECT * FROM users");
               while ($data = mysqli_fetch_array($tampil)) {
 
@@ -59,7 +60,7 @@ if ($_SESSION['role_id'] != 1) {
               <tr style="text-transform:capitalize;"
                 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                 <th class="text-center">
-                  <?php echo $data['id']; ?>
+                  <?php echo $no++ ?>
                 </th>
 
                 <td>

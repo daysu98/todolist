@@ -1,28 +1,20 @@
 <?php
 if (!isset($_GET['hal'])) {
-  return header("location: /todolist/apps?hal=kategori"); 
+   return header("location: /todolist/apps?hal=kategori");
 }
 
 if ($_SESSION['role_id'] != 2) {
-  echo "<script>window.location='/todolist/apps';</script>";
+   echo "<script>window.location='/todolist/apps';</script>";
 }
-
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$itemsPerPage = 10; // Adjust this based on how many items you want to display per page
-
-$offset = ($page - 1) * $itemsPerPage;
-
-$query = mysqli_query($koneksi, "SELECT kategori * FROM kategori WHERE user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
-
-
 ?>
+
 <head>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
+   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Kategori 
+      Kategori
    </h2>
 
    <div class="px-4 py-3 bg-white rounded-lg shadow-md dark:bg-gray-800">
@@ -49,24 +41,33 @@ $query = mysqli_query($koneksi, "SELECT kategori * FROM kategori WHERE user_id =
                <thead>
                   <tr
                      class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                     <th class="px-4 py-3">No</th>
                      <th class="px-4 py-3">Kategori</th>
                      <th class="px-4 py-3">Actions</th>
                   </tr>
                </thead>
                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-               <?php
-              $tampil = mysqli_query($koneksi, "SELECT * FROM kategori WHERE user_id = $_SESSION[user_id]");
-              while ($data = mysqli_fetch_array($tampil)) {
+                  <?php
+                  $page         = isset($_GET['page']) ? $_GET['page'] : 1;
+                  $itemsPerPage = 10;
+
+                  $offset = ($page - 1) * $itemsPerPage;
+                  $query  = mysqli_query($koneksi, "SELECT * FROM kategori WHERE user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
+
+                  $no = 1 + $offset;
+                  while ($data = mysqli_fetch_array($query)) {
 
 
-                ?>
+                     ?>
                      <tr class="text-gray-700 dark:text-gray-400">
-                        
-                        
+                        <td class="px-4 py-3 text-sm">
+                           <?= $no++ ?>
+                        </td>
+
                         <td class="px-4 py-3 text-sm">
                            <?= $data['kategori'] ?>
                         </td>
-                        
+
                         <td class="px-4 py-3">
                            <div class="flex items-center space-x-4 text-sm">
                               <a href="?hal=editkategori&id=<?= $data['id'] ?>"
@@ -100,23 +101,23 @@ $query = mysqli_query($koneksi, "SELECT kategori * FROM kategori WHERE user_id =
                </tbody>
             </table>
 
-            
-    <!-- Pagination links -->
-<?php
-$totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kategori WHERE user_id = $_SESSION[user_id]");
-$totalItems = mysqli_fetch_assoc($totalItemsQuery)['total'];
 
-$totalPages = ceil($totalItems / $itemsPerPage);
+            <!-- Pagination links -->
+            <?php
+            $totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kategori WHERE user_id = $_SESSION[user_id]");
+            $totalItems      = mysqli_fetch_assoc($totalItemsQuery)['total'];
 
-if ($totalPages > 1) {
-    echo '<div class="flex justify-end mt-4">';
-    for ($i = 1; $i <= $totalPages; $i++) {
-        $activeClass = $i == $page ? 'bg-purple-600 text-white' : 'text-purple-600';
-        echo '<a href="?hal=kategori&page=' . $i . '" class="px-3 py-1 mx-1 text-sm font-medium leading-5 rounded-md hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple ' . $activeClass . '">' . $i . '</a>';
-    }
-    echo '</div>';
-}
-?>
+            $totalPages = ceil($totalItems / $itemsPerPage);
+
+            if ($totalPages > 1) {
+               echo '<div class="flex justify-end mt-4">';
+               for ($i = 1; $i <= $totalPages; $i++) {
+                  $activeClass = $i == $page ? 'bg-purple-600 text-white' : 'text-purple-600';
+                  echo '<a href="?hal=kategori&page=' . $i . '" class="px-3 py-1 mx-1 text-sm font-medium leading-5 rounded-md hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple ' . $activeClass . '">' . $i . '</a>';
+               }
+               echo '</div>';
+            }
+            ?>
 
 
          </div>

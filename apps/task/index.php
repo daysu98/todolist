@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 if (!isset($_GET['hal'])) {
    return header("location:/todolist/apps?hal=task");
@@ -8,18 +8,19 @@ if ($_SESSION['role_id'] != 2) {
    echo "<script>window.location='/todolist/apps';</script>";
 }
 
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$page         = isset($_GET['page']) ? $_GET['page'] : 1;
 $itemsPerPage = 10; // Adjust this based on how many items you want to display per page
 
 $offset = ($page - 1) * $itemsPerPage;
 
-$query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
-
+if (isset($_GET['search_task'])) {
+   $search = "AND task.task_name LIKE '%$_GET[search_task]%'";
+}
+else {
+   $search = "";
+}
 
 ?>
-<head>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
-</head>
 
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -45,13 +46,6 @@ $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status
             <span>Add</span>
          </a>
       </div>
-      <div class="w-full overflow-x-auto">
-    <table class="w-full whitespace-no-wrap">
-        <!-- ... (your existing code) -->
-    </table>
-    
-   
-</div>
 
       <div class="w-full overflow-hidden rounded-lg shadow-xs">
          <div class="w-full overflow-x-auto">
@@ -59,6 +53,7 @@ $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status
                <thead>
                   <tr
                      class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                     <th class="px-4 py-3">No</th>
                      <th class="px-4 py-3">Gambar</th>
                      <th class="px-4 py-3">Task</th>
                      <th class="px-4 py-3">Kategori</th>
@@ -67,127 +62,140 @@ $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status
                      <th class="px-4 py-3">Actions</th>
                   </tr>
                </thead>
-               
+
                <div id="taskContent" class="w-full overflow-x-auto">
-               <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                  <?php 
-                 $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id] LIMIT $itemsPerPage OFFSET $offset");
-                 while ($data = mysqli_fetch_array($query)) { ?>
-                     <tr class="text-gray-700 dark:text-gray-400">
-                       
-
-                           <td> <a href="../uploads/<?=$data['pic']?>"> <img src="../uploads/<?=$data['pic']?>"class="img-box" style="max-widht:15em;"
-                                    width="80" ></a> </td>
-
-                        <td class="px-4 py-3 text-sm">
-                           <?= $data['task_name'] ?>
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                           <?= $data['kategori'] ?>
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                           <?= $data['deadline'] ?>
-                        </td>
-                        <td class="px-4 py-3 text-xs">
-                           <?php
-                           if ($data['status_id'] == 1) {
-                              echo '<span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"> ' . $data['status'] . ' </span>';
-                           }
-                           elseif ($data['status_id'] == 2) {
-                              echo '<span  class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-yellow-100"> ' . $data['status'] . ' </span>';
-                           }
-                           else {
-                              echo '<span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">' . $data['status'] . ' </span>';
-                           }
-
-                           ?>
-                        </td>
-                        <td class="px-4 py-3">
-                           <div class="flex items-center space-x-4 text-sm">
-                              <a href="?hal=edittask&id=<?= $data['id'] ?>"
-                                 class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
-                                 aria-label="Edit">
-                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                       d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
-                                    </path>
-                                 </svg>
-                              </a>
-                              <form action="?hal=deltask" method="post">
-                                 <input type="hidden" name="id" value="<?= $data["id"] ?>">
-                                 <button type="submit" name="hapus"
-                                    onclick="return confirm('Yakin ingin menghapus task <?= $data['id'] ?>?');"
-                                    class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
-                                    aria-label="Delete">
-                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                                       <path fill-rule="evenodd"
-                                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                          clip-rule="evenodd"></path>
-                                    </svg>
-                                 </button>
-                              </form>
-                           </div>
-                        </td>
-                     </tr>
+                  <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                      <?php
-                  }
-                  ?>
-                  </div>
+                     $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id] $search LIMIT $itemsPerPage OFFSET $offset");
+                     $no = 1 + $offset;
+                     while ($data = mysqli_fetch_array($query)) { ?>
+                        <tr class="text-gray-700 dark:text-gray-400">
+
+                           <td class="px-4 py-3 text-sm">
+                              <?= $no++ ?>
+                           </td>
+
+                           <td> <a href="../uploads/<?= $data['pic'] ?>"> <img src="../uploads/<?= $data['pic'] ?>"
+                                    class="img-box" style="max-widht:15em;" width="80"></a> </td>
+
+                           <td class="px-4 py-3 text-sm">
+                              <?= $data['task_name'] ?>
+                           </td>
+                           <td class="px-4 py-3 text-sm">
+                              <?= $data['kategori'] ?>
+                           </td>
+                           <td class="px-4 py-3 text-sm">
+                              <?= $data['deadline'] ?>
+                           </td>
+                           <td class="px-4 py-3 text-xs">
+                              <?php
+                              if ($data['status_id'] == 1) {
+                                 echo '<span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"> ' . $data['status'] . ' </span>';
+                              }
+                              elseif ($data['status_id'] == 2) {
+                                 echo '<span  class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-yellow-100"> ' . $data['status'] . ' </span>';
+                              }
+                              else {
+                                 echo '<span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">' . $data['status'] . ' </span>';
+                              }
+
+                              ?>
+                           </td>
+                           <td class="px-4 py-3">
+                              <div class="flex items-center space-x-4 text-sm">
+                                 <a href="?hal=edittask&id=<?= $data['id'] ?>"
+                                    class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                                    aria-label="Edit">
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                       <path
+                                          d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
+                                       </path>
+                                    </svg>
+                                 </a>
+                                 <form action="?hal=deltask" method="post">
+                                    <input type="hidden" name="id" value="<?= $data["id"] ?>">
+                                    <input type="hidden" name="search_task" value="<?= $_GET['search_task'] ?>">
+                                    <button type="submit" name="hapus"
+                                       onclick="return confirm('Yakin ingin menghapus task <?= $data['id'] ?>?');"
+                                       class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                                       aria-label="Delete">
+                                       <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                          <path fill-rule="evenodd"
+                                             d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                             clip-rule="evenodd"></path>
+                                       </svg>
+                                    </button>
+                                 </form>
+                              </div>
+                           </td>
+                        </tr>
+                        <?php
+                     }
+                     ?>
+               </div>
                </tbody>
             </table>
-         
-    
-   
-    
-    <!-- Pagination links -->
-    <?php
-    $totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM task WHERE user_id = $_SESSION[user_id]");
-    $totalItems = mysqli_fetch_assoc($totalItemsQuery)['total'];
-    
-    $totalPages = ceil($totalItems / $itemsPerPage);
-    
-    if ($totalPages > 1) {
-        echo '<div class="flex justify-end mt-4">';
-        for ($i = 1; $i <= $totalPages; $i++) {
-            $activeClass = $i == $page ? 'bg-purple-600 text-white' : 'text-purple-600';
-            echo '<a href="?hal=task&page=' . $i . '" class="px-3 py-1 mx-1 text-sm font-medium leading-5 rounded-md hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple ' . $activeClass . '">' . $i . '</a>';
-        }
-        echo '</div>';
-    }
-    ?>
-</div>
 
-           
-    
+
+
+
+            <!-- Pagination links -->
+            <?php
+            $totalItemsQuery = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM task WHERE user_id = $_SESSION[user_id] $search");
+            $totalItems      = mysqli_fetch_assoc($totalItemsQuery)['total'];
+
+            $totalPages = ceil($totalItems / $itemsPerPage);
+
+            if ($totalPages > 1) {
+               echo '<div class="flex justify-end mt-4">';
+               for ($i = 1; $i <= $totalPages; $i++) {
+                  $activeClass = $i == $page ? 'bg-purple-600 text-white' : 'text-purple-600';
+
+                  if (isset($_GET['search_task'])) {
+                     $link = '?hal=task&search_task=' . $_GET['search_task'] . '&page=' . $i;
+                  }
+                  else {
+                     $link = '?hal=task&page=' . $i;
+                  }
+
+                  echo '<a href="' . $link. '" class="px-3 py-1 mx-1 text-sm font-medium leading-5 rounded-md hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple ' . $activeClass . '">' . $i . '</a>';
+               }
+               echo '</div>';
+            }
+            ?>
          </div>
+
+
+
       </div>
    </div>
-   <?php
+</div>
+<?php
 
 $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status FROM task JOIN kategori ON task.kategori_id = kategori.id JOIN status ON task.status_id = status.id WHERE task.user_id = $_SESSION[user_id]");
 
 while ($data = mysqli_fetch_array($query)) {
-    // Check if the deadline has passed and the status is not 'Finish', 'Not Yet', or 'On Progress'
-    $currentDate = date('Y-m-d');
-    $deadline = $data['deadline'];
-    $allowedStatus = ['Finish'];
+   // Check if the deadline has passed and the status is not 'Finish', 'Not Yet', or 'On Progress'
+   $currentDate   = date('Y-m-d');
+   $deadline      = $data['deadline'];
+   $allowedStatus = ['Finish'];
 
-    if ($currentDate > $deadline && !in_array($data['status'], $allowedStatus)) {
-        // Update the status to "Expired"
-        $updateQuery = "UPDATE task SET status_id = 6 WHERE id = $data[id]";
-        mysqli_query($koneksi, $updateQuery);
+   if ($currentDate > $deadline && !in_array($data['status'], $allowedStatus)) {
+      // Update the status to "Expired"
+      $updateQuery = "UPDATE task SET status_id = 6 WHERE id = $data[id]";
+      mysqli_query($koneksi, $updateQuery);
 
-        // Update the $data array to reflect the updated status
-        $data['status_id'] = 6;
-        $data['status'] = 'Expired';
-    }
+      // Update the $data array to reflect the updated status
+      $data['status_id'] = 6;
+      $data['status']    = 'Expired';
+   }
 }
 
-    ?>
-    <tr class="text-gray-700 dark:text-gray-400">
-        <!-- ... (your existing code) -->
-    </tr>
-    <?php
+?>
+<tr class="text-gray-700 dark:text-gray-400">
+   <!-- ... (your existing code) -->
+</tr>
+<?php
 
 ?>
 
