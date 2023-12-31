@@ -1,17 +1,4 @@
-<!-- <?php
-if ($_SERVER['PHP_SELF'] != '/todolist/apps/index.php') {
-   return header("location:/todolist/apps");
-}
-?>
 
-<div class="container px-6 mx-auto grid">
-   <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Dashboard
-   </h2>
-   <center>
-      <p class="dark:text-gray-200">Selamat Datang di aplikasi Todolist</p>
-   </center>
-</div> -->
 
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
@@ -79,11 +66,9 @@ if ($_SERVER['PHP_SELF'] != '/todolist/apps/index.php') {
         
         <main class="h-full overflow-y-auto">
           <div class="container px-6 mx-auto grid">
-            <h2
-              class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Dashboard
-            </h2>
+           <br>
+           <br>
+           <br>
             <!-- CTA -->
             
             <!-- Cards -->
@@ -303,10 +288,7 @@ if ($result) {
               </div>
             </div>
 
-            <div class="container">
-        <!-- "Get Started" button that links to the task page -->
-        <a href="/todolist/apps?hal=task" id="getStartedButton">Get Started</a>
-    </div>
+           
             <!-- New Table -->
            
 

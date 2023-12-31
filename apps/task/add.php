@@ -10,7 +10,7 @@ if ($_SESSION['role_id'] != 2) {
 
 <div class="container px-6 mx-auto grid">
    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Add Task
+      Add 
    </h2>
    <div class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800" style="margin-right: 7%; margin-left: 7%; ">
       <form method="POST" enctype="multipart/form-data">

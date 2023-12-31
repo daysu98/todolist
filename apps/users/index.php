@@ -27,7 +27,7 @@ if ($_SESSION['role_id'] != 1) {
                      fill="#f4f5f7"></path>
                </g>
             </svg>
-            <span>Tambah Users</span>
+            <span>Add</span>
          </a>
       </div>
     <div class="w-full overflow-hidden rounded-lg shadow-xs">

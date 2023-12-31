@@ -42,7 +42,7 @@ $query = mysqli_query($koneksi, "SELECT task.*, kategori.kategori, status.status
                      fill="#f4f5f7"></path>
                </g>
             </svg>
-            <span>Tambah Task</span>
+            <span>Add</span>
          </a>
       </div>
       <div class="w-full overflow-x-auto">
