@@ -23,11 +23,11 @@ else {
 if (isset($_GET['expired'])) {
    switch ($_GET['expired']) {
       case 'now':
-         $deadlineQuery = "AND task.deadline = '$dateNow' AND task.status_id <> 6";
+         $deadlineQuery = "AND task.deadline = '$dateNow' AND task.status_id <> 4";
          break;
 
       case 'tomorrow':
-         $deadlineQuery = "AND task.deadline = '$dateTomorrow' AND task.status_id <> 6";
+         $deadlineQuery = "AND task.deadline = '$dateTomorrow' AND task.status_id <> 4";
          break;
       
       default:
@@ -36,9 +36,16 @@ if (isset($_GET['expired'])) {
    }
 }
 else {
-   $deadlineQueryQuery = "";
+   $deadlineQuery = "";
 }
 
+// if (isset($_GET['finish'])) {
+//   $queryTasks = "SELECT * FROM task WHERE user_id = $_SESSION[user_id] AND status_id <> 1";
+  
+// } 
+// else {
+//    $deadlineQuery = "";
+// }
 ?>
 
 <div class="container px-6 mx-auto grid">
@@ -95,7 +102,7 @@ else {
                            </td>
 
                            <td> <a href="../uploads/<?= $data['pic'] ?>"> <img src="../uploads/<?= $data['pic'] ?>"
-                                    class="img-box" style="max-widht:15em;" width="80"></a> </td>
+                                    class="img-box" style="max-width:15em;" width="80"></a> </td>
 
                            <td class="px-4 py-3 text-sm">
                               <?= $data['task_name'] ?>
@@ -133,7 +140,7 @@ else {
                                  </a>
                                  <form action="?hal=deltask" method="post">
                                     <input type="hidden" name="id" value="<?= $data["id"] ?>">
-                                    <input type="hidden" name="search_task" value="<?= $_GET['search_task'] ?>">
+                                    <input type="hidden" name="search_task" value="<?= @$_GET['search_task'] ?>">
                                     <button type="submit" name="hapus"
                                        onclick="return confirm('Yakin ingin menghapus task <?= $data['id'] ?>?');"
                                        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
@@ -201,11 +208,11 @@ while ($data = mysqli_fetch_array($query)) {
 
    if ($currentDate > $deadline && !in_array($data['status'], $allowedStatus)) {
       // Update the status to "Expired"
-      $updateQuery = "UPDATE task SET status_id = 6 WHERE id = $data[id]";
+      $updateQuery = "UPDATE task SET status_id = 4 WHERE id = $data[id]";
       mysqli_query($koneksi, $updateQuery);
 
       // Update the $data array to reflect the updated status
-      $data['status_id'] = 6;
+      $data['status_id'] = 4;
       $data['status']    = 'Expired';
    }
 }

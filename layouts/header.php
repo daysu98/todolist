@@ -3,11 +3,14 @@ if ($_SESSION['role_id'] != 1) {
    $dateTomorrow = date("Y-m-d", strtotime("+1 day"));
    $dateNow      = date("Y-m-d");
    
-   $queryExpiredTomorrow = "SELECT COUNT(*) FROM task WHERE user_id = $_SESSION[user_id] AND deadline = '$dateTomorrow' AND task.status_id <> 6";
-   $queryExpiredToday    = "SELECT COUNT(*) FROM task WHERE user_id = $_SESSION[user_id] AND deadline = '$dateNow' AND task.status_id <> 6";
+   $queryExpiredTomorrow = "SELECT COUNT(*) FROM task WHERE user_id = $_SESSION[user_id] AND deadline = '$dateTomorrow' AND task.status_id <> 4";
+   $queryExpiredToday    = "SELECT COUNT(*) FROM task WHERE user_id = $_SESSION[user_id] AND deadline = '$dateNow' AND task.status_id <> 4";
    
    $dataCount['total_expired_tomorrow'] = mysqli_fetch_array(mysqli_query($koneksi, $queryExpiredTomorrow))[0];
    $dataCount['total_expired_today']    = mysqli_fetch_array(mysqli_query($koneksi, $queryExpiredToday))[0];
+} else {
+   $dataCount['total_expired_tomorrow'] =0;
+   $dataCount['total_expired_today']    =0;
 }
 ?>
 
